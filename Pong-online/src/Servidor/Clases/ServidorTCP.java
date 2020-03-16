@@ -33,19 +33,22 @@ public class ServidorTCP extends Thread implements Config, Comunicacion {
 
     public void iniciarServidor() {
         try {
+            System.out.println("Esperando conexiones...");
             do {
                 clientes.add(new ClienteTCP(server.accept(), this));
             } while (clientes.size() < 2);
-            
+            System.out.println("Clientes registrados");
             String parametrosInicales = "[" + 385 + "][" + 235 + "]"
                     + "[" + 10 + "][" + 210 + "]"
                     + "[" + 775 + "][" + 210 + "]";
             clientes.get(0).mandar("J1");
             clientes.get(1).mandar("J2");
+            System.out.println("Asignación de roles");
             clientes.get(0).mandar(parametrosInicales);
             clientes.get(1).mandar(parametrosInicales);
-            
+            System.out.println("Asignación de parametros iniciales");
             if(clientes.get(0).recibir().equals("ok") && clientes.get(1).recibir().equals("ok")){
+                System.out.println("Incio del juego");
                 clientes.get(0).start();
                 clientes.get(1).start();
             }
