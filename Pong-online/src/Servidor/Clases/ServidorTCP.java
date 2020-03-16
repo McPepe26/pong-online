@@ -6,6 +6,7 @@
 package Servidor.Clases;
 
 import Config.Interfaces.Config;
+import Servidor.Interfaces.Comunicacion;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.util.LinkedList;
@@ -16,7 +17,7 @@ import java.util.logging.Logger;
  *
  * @author ja-za
  */
-public class ServidorTCP extends Thread implements Config{
+public class ServidorTCP extends Thread implements Config, Comunicacion{
     private ServerSocket server;
     private LinkedList<ClienteTCP> clientes;
 
@@ -26,6 +27,13 @@ public class ServidorTCP extends Thread implements Config{
             clientes = new LinkedList<>();
         } catch (IOException ex) {
             Logger.getLogger(ServidorTCP.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    @Override
+    public void difusion(String info) {
+        for(ClienteTCP c : clientes){
+            c.setInfo(info);
         }
     }
     
