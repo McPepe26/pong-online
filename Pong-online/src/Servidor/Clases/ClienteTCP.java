@@ -5,7 +5,10 @@
  */
 package Servidor.Clases;
 
+import Servidor.Interfaces.Comunicacion;
+import java.io.DataInputStream;
 import java.io.DataOutputStream;
+import java.io.IOException;
 import java.net.Socket;
 
 /**
@@ -15,4 +18,16 @@ import java.net.Socket;
 public class ClienteTCP extends Thread{
     private Socket socket;
     private DataOutputStream salida;    
+    private DataInputStream entrada;
+    private Comunicacion comunicacion;
+
+    public ClienteTCP(Socket socket, Comunicacion comunicacion) throws IOException {
+        this.socket = socket;
+        this.comunicacion = comunicacion;
+        
+        salida =  new DataOutputStream(socket.getOutputStream());
+        entrada = new DataInputStream(socket.getInputStream());
+    }
+    
+    
 }
