@@ -13,4 +13,5 @@ public interface Comunicacion {
     void iniciarJuego();
     void esJugador(boolean esJugador1);
     void setParametros(int params[]);
+    String getParametros();
 }
