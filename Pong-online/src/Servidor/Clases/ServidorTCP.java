@@ -36,6 +36,7 @@ public class ServidorTCP extends Thread implements Config, Comunicacion {
             System.out.println("Esperando conexiones...");
             do {
                 clientes.add(new ClienteTCP(server.accept(), this));
+                System.out.println("Cliente "+clientes.size()+" registrado");
             } while (clientes.size() < 2);
             System.out.println("Clientes registrados");
             String parametrosInicales = "[" + 385 + "][" + 235 + "]"
