@@ -17,7 +17,8 @@ import java.util.logging.Logger;
  *
  * @author ja-za
  */
-public class ServidorTCP extends Thread implements Config, Comunicacion{
+public class ServidorTCP extends Thread implements Config, Comunicacion {
+
     private ServerSocket server;
     private LinkedList<ClienteTCP> clientes;
 
@@ -30,12 +31,34 @@ public class ServidorTCP extends Thread implements Config, Comunicacion{
         }
     }
 
+    public void iniciarServidor() {
+        try {
+            do {
+                clientes.add(new ClienteTCP(server.accept(), this));
+            } while (clientes.size() < 2);
+            
+            String parametrosInicales = "[" + 385 + "][" + 235 + "]"
+                    + "[" + 10 + "][" + 210 + "]"
+                    + "[" + 775 + "][" + 210 + "]";
+            clientes.get(0).mandar("J1");
+            clientes.get(1).mandar("J2");
+            clientes.get(0).mandar(parametrosInicales);
+            clientes.get(1).mandar(parametrosInicales);
+            
+            if(clientes.get(0).recibir().equals("ok") && clientes.get(1).recibir().equals("ok")){
+                clientes.get(0).start();
+                clientes.get(1).start();
+            }
+        } catch (IOException ex) {
+            Logger.getLogger(ServidorTCP.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
     @Override
     public void difusion(String info) {
-        for(ClienteTCP c : clientes){
+        for (ClienteTCP c : clientes) {
             c.setInfo(info);
         }
     }
-    
-    
+
 }
