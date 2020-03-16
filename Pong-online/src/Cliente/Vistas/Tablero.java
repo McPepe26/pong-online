@@ -20,7 +20,7 @@ public class Tablero extends JFrame {
     private Juego game;
     private Movimiento move;
 
-    public Tablero(boolean esServidor, ManejarEventos manejador) {
+    public Tablero(ManejarEventos manejador) {
         setTitle("ExamenPong");
         setSize(ancho, alto);
         setLocationRelativeTo(null); //ubicando la ventana en el centro de la pantalla
@@ -30,26 +30,26 @@ public class Tablero extends JFrame {
                 System.exit(0);
             }
         });
-        game = new Juego(esServidor, manejador);
+        game = new Juego(manejador);
         add(game);
         addKeyListener(new EventoTeclado());
         move = new Movimiento(this);
     }
     
-    public void setDatos(int[] datos) {
-        game.setDatos(datos);
+    public void setParametros(int[] datos) {
+        game.setParametros(datos);
     }
     
-    public int[] getPosRaqueta(int xR, int yR){
-        return game.getDatosPos(xR, yR);
-    }
-    
-    public int[] getPosRaquetaCliente(){
-        return game.getPosRaqueta();
+    public int[] getParametros(){
+        return game.getParametros();
     }
     
     public void iniciar(){
         move.start();
         setVisible(true);
+    }
+    
+    public void setJugador(boolean esJugador1){
+        game.setEsJugador1(esJugador1);
     }
 }

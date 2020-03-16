@@ -60,20 +60,19 @@ public class ClienteTCP extends Thread implements Config {
             String jugador, parametros;
             jugador = recibir();
             parametros = recibir();
-            if (jugador.equals("J1")) {
+            if (jugador.equals("J1")) 
                 //Asignar a la vista el jugador 1
                 comunicacion.esJugador(true);
-                comunicacion.setParametros(obtenerParametros(parametros));
-            } else {
+            else 
                 //Asignar a la vista el jugador 2
                 comunicacion.esJugador(false);
-                comunicacion.setParametros(obtenerParametros(parametros));
-            }
+            comunicacion.setParametros(obtenerParametros(parametros));
             mandar("ok");
             comunicacion.iniciarJuego();
             while (true) {
                 //mandamos los datos actuales
                 mandar(comunicacion.getParametros());
+                //Recibimos los datos del servidor
                 int datos[] = obtenerParametros(recibir());
                 //Los mandamos a la vista
                 comunicacion.setParametros(datos);

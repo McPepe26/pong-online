@@ -39,8 +39,8 @@ public class ServidorTCP extends Thread implements Config, Comunicacion {
             } while (clientes.size() < 2);
             System.out.println("Clientes registrados");
             String parametrosInicales = "[" + 385 + "][" + 235 + "]"
-                    + "[" + 10 + "][" + 210 + "]"
-                    + "[" + 775 + "][" + 210 + "]";
+                                      + "[" + 10 + "][" + 210 + "]"
+                                      + "[" + 0 + "][" + 0 + "]";
             clientes.get(0).mandar("J1");
             clientes.get(1).mandar("J2");
             System.out.println("Asignación de roles");
