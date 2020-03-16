@@ -11,4 +11,5 @@ package Cliente.Interfaces;
  */
 public interface ManejarEventos {
     void iniciarCliente();
+    void finJuego();
 }
