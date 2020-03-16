@@ -17,6 +17,7 @@ import java.net.Socket;
  */
 public class ClienteTCP extends Thread{
     private Socket socket;
+    private String info;
     private DataOutputStream salida;    
     private DataInputStream entrada;
     private Comunicacion comunicacion;
@@ -28,6 +29,13 @@ public class ClienteTCP extends Thread{
         salida =  new DataOutputStream(socket.getOutputStream());
         entrada = new DataInputStream(socket.getInputStream());
     }
-    
+
+    public String getInfo() {
+        return info;
+    }
+
+    public void setInfo(String info) {
+        this.info = info;
+    }
     
 }
