@@ -17,10 +17,13 @@ public class AdministrarVistas implements ManejarEventos, Comunicacion{
 
     private ClienteTCP cliente;
     private Tablero tab;
+    private ClientePrincipal clientePrincipal;
 
     public AdministrarVistas() {
         cliente = new ClienteTCP(this);
         tab = new Tablero(this);
+        clientePrincipal = new ClientePrincipal(this);
+        clientePrincipal.setVisible(true);
     }
     
     
@@ -34,6 +37,7 @@ public class AdministrarVistas implements ManejarEventos, Comunicacion{
     public void iniciarJuego() {
         //Iniciamos la vista del juego
         tab.iniciar();
+        clientePrincipal.setVisible(false);
     }
 
     @Override
