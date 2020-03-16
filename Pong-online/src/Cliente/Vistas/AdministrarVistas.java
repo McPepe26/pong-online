@@ -8,6 +8,10 @@ package Cliente.Vistas;
 import Cliente.Clases.ClienteTCP;
 import Cliente.Interfaces.Comunicacion;
 import Cliente.Interfaces.ManejarEventos;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -20,7 +24,6 @@ public class AdministrarVistas implements ManejarEventos, Comunicacion{
     private ClientePrincipal clientePrincipal;
 
     public AdministrarVistas() {
-        cliente = new ClienteTCP(this);
         tab = new Tablero(this);
         clientePrincipal = new ClientePrincipal(this);
     }
@@ -32,6 +35,7 @@ public class AdministrarVistas implements ManejarEventos, Comunicacion{
     @Override
     public void iniciarCliente() {
         //Iniciamos el hilo para comunicarse al servidor
+        cliente = new ClienteTCP(this);
         cliente.start();
     }
 
@@ -60,5 +64,20 @@ public class AdministrarVistas implements ManejarEventos, Comunicacion{
                "[" + parametros[2] + "][" + parametros[3] + "]" + 
                "[" + parametros[4] + "][" + parametros[5] + "]";
     }
-    
+
+    @Override
+    public void finJuego() {
+        cliente.interrupt();
+        cliente.cerrarConexion();
+        tab.detener();
+        findelJuego();
+    }
+
+    @Override
+    public void findelJuego() {
+        tab.setVisible(false);
+        tab = new Tablero(this);
+        clientePrincipal.activar();
+    }
+
 }

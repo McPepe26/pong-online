@@ -95,6 +95,13 @@ public class ClientePrincipal extends javax.swing.JFrame {
         btnReglas.setEnabled(false);
     }//GEN-LAST:event_btnLanActionPerformed
 
+    public void activar(){
+        btnLan.setEnabled(true);
+        btnOnline.setEnabled(true);
+        btnReglas.setEnabled(true);
+        lblTexto.setText("Pong Online");
+        setVisible(true);
+    }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnLan;
     private javax.swing.JButton btnOnline;

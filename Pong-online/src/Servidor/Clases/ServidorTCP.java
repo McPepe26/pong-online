@@ -21,11 +21,13 @@ public class ServidorTCP extends Thread implements Config, Comunicacion {
 
     private ServerSocket server;
     private LinkedList<ClienteTCP> clientes;
+    private boolean hayJuego;
 
     public ServidorTCP() {
         try {
             server = new ServerSocket(PUERTO);
             clientes = new LinkedList<>();
+            hayJuego = false;
         } catch (IOException ex) {
             Logger.getLogger(ServidorTCP.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -42,6 +44,7 @@ public class ServidorTCP extends Thread implements Config, Comunicacion {
             String parametrosInicales = "[" + 385 + "][" + 235 + "]"
                                       + "[" + 10 + "][" + 210 + "]"
                                       + "[" + 0 + "][" + 0 + "]";
+            
             if(clientes.get(0).recibir().equals("ok") && clientes.get(1).recibir().equals("ok")){
                 clientes.get(0).mandar("J1");
                 clientes.get(1).mandar("J2");
@@ -52,6 +55,7 @@ public class ServidorTCP extends Thread implements Config, Comunicacion {
                 System.out.println("Incio del juego");
                 clientes.get(0).start();
                 clientes.get(1).start();
+                hayJuego = true;
             }
         } catch (IOException ex) {
             Logger.getLogger(ServidorTCP.class.getName()).log(Level.SEVERE, null, ex);
@@ -65,5 +69,30 @@ public class ServidorTCP extends Thread implements Config, Comunicacion {
                 c.setInfo(info);
         }
     }
+
+    @Override
+    public void cerrarConexiones(ClienteTCP cliente) {
+        clientes.remove(cliente);
+        for (ClienteTCP c : clientes) {
+            c.cerrarConexion();
+        }
+        hayJuego = false;
+    }
+
+    @Override
+    public void run() {
+        while(true){
+            try {
+                if(!hayJuego){
+                    iniciarServidor();
+                }
+                Thread.sleep(100);
+            } catch (InterruptedException ex) {
+                Logger.getLogger(ServidorTCP.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }
+    
+    
 
 }

@@ -17,10 +17,11 @@ import java.util.logging.Logger;
  *
  * @author ja-za
  */
-public class ClienteTCP extends Thread{
+public class ClienteTCP extends Thread {
+
     private Socket socket;
     private String info;
-    private DataOutputStream salida;    
+    private DataOutputStream salida;
     private DataInputStream entrada;
     private Comunicacion comunicacion;
 
@@ -28,21 +29,21 @@ public class ClienteTCP extends Thread{
         this.socket = socket;
         this.comunicacion = comunicacion;
         info = "";
-        salida =  new DataOutputStream(socket.getOutputStream());
+        salida = new DataOutputStream(socket.getOutputStream());
         entrada = new DataInputStream(socket.getInputStream());
     }
-    
-    public void mandar(String msg) throws IOException{
+
+    public void mandar(String msg) throws IOException {
         salida.writeUTF(msg);
     }
-    
-    public String recibir() throws IOException{
+
+    public String recibir() throws IOException {
         return entrada.readUTF();
     }
 
     @Override
     public void run() {
-        while(true){
+        while (true) {
             try {
                 int[] datosPos = new int[6];
                 String datos = recibir();
@@ -51,17 +52,32 @@ public class ClienteTCP extends Thread{
                     datosPos[i] = Integer.parseInt(datos.substring(1, fin));
                     datos = datos.substring(fin + 1);
                 }
-                comunicacion.difusion("[" + datosPos[0] + "][" + datosPos[1] + "]" + 
-                                      "[" + datosPos[2] + "][" + datosPos[3] + "]" + 
-                                      "[" + datosPos[4] + "][" + datosPos[5] + "]", this);
-                
+                comunicacion.difusion("[" + datosPos[0] + "][" + datosPos[1] + "]"
+                        + "[" + datosPos[2] + "][" + datosPos[3] + "]"
+                        + "[" + datosPos[4] + "][" + datosPos[5] + "]", this);
+
                 mandar(info);
             } catch (IOException ex) {
-                Logger.getLogger(ClienteTCP.class.getName()).log(Level.SEVERE, null, ex);
+                System.out.println("Conexion perdida");
+                break;
             }
+        }
+        cerrarConexion();
+    }
+    
+    public void cerrarConexion(){
+        try {
+            socket.close();
+            comunicacion.cerrarConexiones(this);
+        } catch (IOException ex) {
+            Logger.getLogger(ClienteTCP.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     
+    public boolean estaConectado(){
+        return !socket.isClosed();
+    }
+
     public String getInfo() {
         return info;
     }
@@ -69,5 +85,5 @@ public class ClienteTCP extends Thread{
     public void setInfo(String info) {
         this.info = info;
     }
-    
+
 }

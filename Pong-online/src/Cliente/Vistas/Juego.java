@@ -11,6 +11,7 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 /**
@@ -48,10 +49,13 @@ public class Juego extends JPanel {
     }
 
     public void Actualizar() {
-        
         if(esJugador1){
             raq.moverR2(getBounds());
             pelo.mover(getBounds(), Choque(raq.getRaqueta()), Choque2(raq2.getRaqueta()));
+            if(pelo.getPuntuacion1() == 5 || pelo.getPuntuacion2() == 5){
+                manejador.finJuego();
+                JOptionPane.showMessageDialog(null, "Ha terminado el juego");
+            }
         }
         else
             raq2.moverR2(getBounds());
@@ -69,7 +73,6 @@ public class Juego extends JPanel {
         if(esJugador1){
             raq2.setX(datos[2]);
             raq2.setY(datos[3]);
-            System.out.println("Jugador 1 X:"+datos[2]+" Y:"+datos[3]);
         }else{
             pelo.setX(datos[0]);
             pelo.setY(datos[1]);
@@ -77,7 +80,6 @@ public class Juego extends JPanel {
             raq.setY(datos[3]);
             pelo.setPuntuacion1Cliente(datos[4]);
             pelo.setPuntuacion2Cliente(datos[5]);
-            System.out.println("Jugador 2 X:"+datos[2]+" Y:"+datos[3]);
         }
     }
     

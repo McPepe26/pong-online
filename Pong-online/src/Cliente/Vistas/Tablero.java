@@ -9,6 +9,7 @@ import Cliente.Interfaces.ManejarEventos;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -27,7 +28,8 @@ public class Tablero extends JFrame {
         setResizable(false);
         addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent evt) {
-                System.exit(0);
+                JOptionPane.showMessageDialog(null, "Ha terminado el juego");
+                manejador.finJuego();
             }
         });
         game = new Juego(manejador);
@@ -47,6 +49,10 @@ public class Tablero extends JFrame {
     public void iniciar(){
         move.start();
         setVisible(true);
+    }
+    
+    public void detener(){
+        move.interrupt();
     }
     
     public void setJugador(boolean esJugador1){

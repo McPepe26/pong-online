@@ -13,4 +13,5 @@ import Servidor.Clases.ClienteTCP;
  */
 public interface Comunicacion {
     void difusion(String info, ClienteTCP cliente);
+    void cerrarConexiones(ClienteTCP cliente);
 }

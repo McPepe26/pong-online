@@ -18,7 +18,7 @@ public class mainServidor {
      */
     public static void main(String[] args) {
         ServidorTCP servidor = new ServidorTCP();
-        servidor.iniciarServidor();
+        servidor.start();
     }
     
 }

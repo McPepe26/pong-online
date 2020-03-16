@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.net.Socket;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -54,6 +55,14 @@ public class ClienteTCP extends Thread implements Config {
         return datosPos;
     }
     
+    public void cerrarConexion(){
+        try{
+            socket.close();
+        }catch(IOException ex){
+            
+        }
+    }
+
     @Override
     public void run() {
         try {
@@ -63,24 +72,29 @@ public class ClienteTCP extends Thread implements Config {
             System.out.println("Recibido rol");
             parametros = recibir();
             System.out.println("Recibidos los parametros iniciales");
-            if (jugador.equals("J1")) 
-                //Asignar a la vista el jugador 1
+            if (jugador.equals("J1")) //Asignar a la vista el jugador 1
+            {
                 comunicacion.esJugador(true);
-            else 
-                //Asignar a la vista el jugador 2
+            } else //Asignar a la vista el jugador 2
+            {
                 comunicacion.esJugador(false);
+            }
             comunicacion.setParametros(obtenerParametros(parametros));
             comunicacion.iniciarJuego();
             while (true) {
                 //mandamos los datos actuales
                 mandar(comunicacion.getParametros());
                 //Recibimos los datos del servidor
-                int datos[] = obtenerParametros(recibir());
+                String recibido = recibir();
+                int datos[] = obtenerParametros(recibido);
                 //Los mandamos a la vista
                 comunicacion.setParametros(datos);
             }
         } catch (IOException ex) {
-            Logger.getLogger(ClienteTCP.class.getName()).log(Level.SEVERE, null, ex);
+            cerrarConexion();
+            comunicacion.findelJuego();
+            JOptionPane.showMessageDialog(null, "Ha terminado el juego");
+//            Logger.getLogger(ClienteTCP.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 

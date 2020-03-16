@@ -28,7 +28,7 @@ public class Movimiento extends Thread {
             try {
                 Thread.sleep(1);
             } catch (InterruptedException ex) {
-                Logger.getLogger(Movimiento.class.getName()).log(Level.SEVERE, null, ex);
+                System.out.println("Hilo interrumpido");
             }
 
         }
