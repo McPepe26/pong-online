@@ -73,10 +73,10 @@ public class ClienteTCP extends Thread implements Config {
             comunicacion.iniciarJuego();
             while (true) {
                 //mandamos los datos actuales
-                mandar("");
+                mandar(comunicacion.getParametros());
                 int datos[] = obtenerParametros(recibir());
                 //Los mandamos a la vista
-                
+                comunicacion.setParametros(datos);
             }
         } catch (IOException ex) {
             Logger.getLogger(ClienteTCP.class.getName()).log(Level.SEVERE, null, ex);
