@@ -27,7 +27,7 @@ public class ClienteTCP extends Thread{
     public ClienteTCP(Socket socket, Comunicacion comunicacion) throws IOException {
         this.socket = socket;
         this.comunicacion = comunicacion;
-        
+        info = "";
         salida =  new DataOutputStream(socket.getOutputStream());
         entrada = new DataInputStream(socket.getInputStream());
     }
@@ -53,11 +53,8 @@ public class ClienteTCP extends Thread{
                 }
                 comunicacion.difusion("[" + datosPos[0] + "][" + datosPos[1] + "]" + 
                                       "[" + datosPos[2] + "][" + datosPos[3] + "]" + 
-                                      "[" + datosPos[4] + "][" + datosPos[5] + "]");
-                if (info.equals(""))
-                    info = "[" + datosPos[0] + "][" + datosPos[1] + "]" + 
-                           "[" + datosPos[2] + "][" + datosPos[3] + "]" + 
-                           "[" + datosPos[4] + "][" + datosPos[5] + "]";
+                                      "[" + datosPos[4] + "][" + datosPos[5] + "]", this);
+                
                 mandar(info);
             } catch (IOException ex) {
                 Logger.getLogger(ClienteTCP.class.getName()).log(Level.SEVERE, null, ex);

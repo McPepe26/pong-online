@@ -48,11 +48,13 @@ public class Juego extends JPanel {
     }
 
     public void Actualizar() {
-        pelo.mover(getBounds(), Choque(raq.getRaqueta()), Choque2(raq2.getRaqueta()));
-        if(esJugador1)
-            raq.moverR1(getBounds());
+        
+        if(esJugador1){
+            raq.moverR2(getBounds());
+            pelo.mover(getBounds(), Choque(raq.getRaqueta()), Choque2(raq2.getRaqueta()));
+        }
         else
-            raq2.moverR1(getBounds());
+            raq2.moverR2(getBounds());
     }
 
     public boolean Choque(Rectangle raque) {
@@ -64,16 +66,18 @@ public class Juego extends JPanel {
     }
 
     public void setParametros(int[] datos) {
-        pelo.setX(datos[0]);
-        pelo.setY(datos[1]);
         if(esJugador1){
             raq2.setX(datos[2]);
             raq2.setY(datos[3]);
-            pelo.setPuntuacion2Cliente(datos[5]);
+            System.out.println("Jugador 1 X:"+datos[2]+" Y:"+datos[3]);
         }else{
+            pelo.setX(datos[0]);
+            pelo.setY(datos[1]);
             raq.setX(datos[2]);
             raq.setY(datos[3]);
             pelo.setPuntuacion1Cliente(datos[4]);
+            pelo.setPuntuacion2Cliente(datos[5]);
+            System.out.println("Jugador 2 X:"+datos[2]+" Y:"+datos[3]);
         }
     }
     

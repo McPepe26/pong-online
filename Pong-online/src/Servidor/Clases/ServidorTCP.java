@@ -42,13 +42,13 @@ public class ServidorTCP extends Thread implements Config, Comunicacion {
             String parametrosInicales = "[" + 385 + "][" + 235 + "]"
                                       + "[" + 10 + "][" + 210 + "]"
                                       + "[" + 0 + "][" + 0 + "]";
-            clientes.get(0).mandar("J1");
-            clientes.get(1).mandar("J2");
-            System.out.println("Asignación de roles");
-            clientes.get(0).mandar(parametrosInicales);
-            clientes.get(1).mandar(parametrosInicales);
-            System.out.println("Asignación de parametros iniciales");
             if(clientes.get(0).recibir().equals("ok") && clientes.get(1).recibir().equals("ok")){
+                clientes.get(0).mandar("J1");
+                clientes.get(1).mandar("J2");
+                System.out.println("Asignación de roles");
+                clientes.get(0).mandar(parametrosInicales);
+                clientes.get(1).mandar(parametrosInicales);
+                System.out.println("Asignación de parametros iniciales");
                 System.out.println("Incio del juego");
                 clientes.get(0).start();
                 clientes.get(1).start();
@@ -59,9 +59,10 @@ public class ServidorTCP extends Thread implements Config, Comunicacion {
     }
 
     @Override
-    public void difusion(String info) {
+    public void difusion(String info, ClienteTCP cliente) {
         for (ClienteTCP c : clientes) {
-            c.setInfo(info);
+            if(cliente != c)
+                c.setInfo(info);
         }
     }
 

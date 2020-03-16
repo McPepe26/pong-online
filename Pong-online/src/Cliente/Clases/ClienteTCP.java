@@ -58,8 +58,11 @@ public class ClienteTCP extends Thread implements Config {
     public void run() {
         try {
             String jugador, parametros;
+            mandar("ok");
             jugador = recibir();
+            System.out.println("Recibido rol");
             parametros = recibir();
+            System.out.println("Recibidos los parametros iniciales");
             if (jugador.equals("J1")) 
                 //Asignar a la vista el jugador 1
                 comunicacion.esJugador(true);
@@ -67,7 +70,6 @@ public class ClienteTCP extends Thread implements Config {
                 //Asignar a la vista el jugador 2
                 comunicacion.esJugador(false);
             comunicacion.setParametros(obtenerParametros(parametros));
-            mandar("ok");
             comunicacion.iniciarJuego();
             while (true) {
                 //mandamos los datos actuales

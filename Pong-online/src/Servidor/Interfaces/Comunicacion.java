@@ -5,10 +5,12 @@
  */
 package Servidor.Interfaces;
 
+import Servidor.Clases.ClienteTCP;
+
 /**
  *
  * @author ja-za
  */
 public interface Comunicacion {
-    void difusion(String info);
+    void difusion(String info, ClienteTCP cliente);
 }
