@@ -23,9 +23,11 @@ public class AdministrarVistas implements ManejarEventos, Comunicacion{
         cliente = new ClienteTCP(this);
         tab = new Tablero(this);
         clientePrincipal = new ClientePrincipal(this);
-        clientePrincipal.setVisible(true);
     }
     
+    public void iniciar(){
+        clientePrincipal.setVisible(true);
+    }
     
     @Override
     public void iniciarCliente() {
