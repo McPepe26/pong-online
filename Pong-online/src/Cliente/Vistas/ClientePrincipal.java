@@ -90,6 +90,9 @@ public class ClientePrincipal extends javax.swing.JFrame {
     private void btnLanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLanActionPerformed
         manejador.iniciarCliente();
         lblTexto.setText("Esperando partida ....");
+        btnLan.setEnabled(false);
+        btnOnline.setEnabled(false);
+        btnReglas.setEnabled(false);
     }//GEN-LAST:event_btnLanActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
