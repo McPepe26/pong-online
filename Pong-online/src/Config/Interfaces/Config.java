@@ -11,7 +11,7 @@ package Config.Interfaces;
  */
 public interface Config {
     public final int PUERTO = 2000; //Puerto para la conexión
-    public final String HOST = "localhost"; //Host para la conexión
+    public final String HOST = "127.0.0.1"; //Host para la conexión
     public final static String SERVIDOR = "S";
     public final static String CLIENTE = "C";
 }

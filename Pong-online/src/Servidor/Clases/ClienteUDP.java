@@ -5,10 +5,15 @@
  */
 package Servidor.Clases;
 
+import Config.Interfaces.Config;
 import Servidor.Interfaces.Comunicacion;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.net.Inet4Address;
+import java.net.InetAddress;
 import java.net.Socket;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -17,28 +22,28 @@ import java.util.logging.Logger;
  *
  * @author ja-za
  */
-public class ClienteTCP extends Thread {
+public class ClienteUDP extends Thread implements Config{
 
-    private Socket socket;
+    private DatagramSocket socket;
+    private DatagramPacket packet;
     private String info;
-    private DataOutputStream salida;
-    private DataInputStream entrada;
     private Comunicacion comunicacion;
 
-    public ClienteTCP(Socket socket, Comunicacion comunicacion) throws IOException {
+    public ClienteUDP(DatagramSocket socket, Comunicacion comunicacion) throws IOException {
         this.socket = socket;
         this.comunicacion = comunicacion;
         info = "";
-        salida = new DataOutputStream(socket.getOutputStream());
-        entrada = new DataInputStream(socket.getInputStream());
     }
 
     public void mandar(String msg) throws IOException {
-        salida.writeUTF(msg);
+        byte[] bytesToSend = msg.getBytes();
+        packet.setData(bytesToSend);
+        socket.send(packet);
     }
 
     public String recibir() throws IOException {
-        return entrada.readUTF();
+        socket.receive(packet);
+        return new String(packet.getData());
     }
 
     @Override
@@ -46,6 +51,7 @@ public class ClienteTCP extends Thread {
         while (true) {
             try {
                 int[] datosPos = new int[6];
+                packet = new DatagramPacket(new byte[225], 225);
                 String datos = recibir();
                 for (int i = 0; datos.length() > 0; i++) {
                     int fin = datos.indexOf("]");
@@ -53,8 +59,8 @@ public class ClienteTCP extends Thread {
                     datos = datos.substring(fin + 1);
                 }
                 comunicacion.difusion("[" + datosPos[0] + "][" + datosPos[1] + "]"
-                        + "[" + datosPos[2] + "][" + datosPos[3] + "]"
-                        + "[" + datosPos[4] + "][" + datosPos[5] + "]", this);
+                                    + "[" + datosPos[2] + "][" + datosPos[3] + "]"
+                                    + "[" + datosPos[4] + "][" + datosPos[5] + "]", this);
 
                 mandar(info);
             } catch (IOException ex) {
@@ -66,12 +72,8 @@ public class ClienteTCP extends Thread {
     }
     
     public void cerrarConexion(){
-        try {
-            socket.close();
-            comunicacion.cerrarConexiones(this);
-        } catch (IOException ex) {
-            Logger.getLogger(ClienteTCP.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        socket.close();
+        comunicacion.cerrarConexiones(this);
     }
     
     public boolean estaConectado(){

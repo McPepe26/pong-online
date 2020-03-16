@@ -5,13 +5,13 @@
  */
 package Servidor.Interfaces;
 
-import Servidor.Clases.ClienteTCP;
+import Servidor.Clases.ClienteUDP;
 
 /**
  *
  * @author ja-za
  */
 public interface Comunicacion {
-    void difusion(String info, ClienteTCP cliente);
-    void cerrarConexiones(ClienteTCP cliente);
+    void difusion(String info, ClienteUDP cliente);
+    void cerrarConexiones(ClienteUDP cliente);
 }

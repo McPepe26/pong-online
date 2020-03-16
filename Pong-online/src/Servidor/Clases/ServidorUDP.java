@@ -8,6 +8,7 @@ package Servidor.Clases;
 import Config.Interfaces.Config;
 import Servidor.Interfaces.Comunicacion;
 import java.io.IOException;
+import java.net.DatagramSocket;
 import java.net.ServerSocket;
 import java.util.LinkedList;
 import java.util.logging.Level;
@@ -17,19 +18,19 @@ import java.util.logging.Logger;
  *
  * @author ja-za
  */
-public class ServidorTCP extends Thread implements Config, Comunicacion {
+public class ServidorUDP extends Thread implements Config, Comunicacion {
 
-    private ServerSocket server;
-    private LinkedList<ClienteTCP> clientes;
+    private DatagramSocket server;
+    private LinkedList<ClienteUDP> clientes;
     private boolean hayJuego;
 
-    public ServidorTCP() {
+    public ServidorUDP() {
         try {
-            server = new ServerSocket(PUERTO);
+            server = new DatagramSocket(PUERTO);
             clientes = new LinkedList<>();
             hayJuego = false;
         } catch (IOException ex) {
-            Logger.getLogger(ServidorTCP.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ServidorUDP.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -37,7 +38,8 @@ public class ServidorTCP extends Thread implements Config, Comunicacion {
         try {
             System.out.println("Esperando conexiones...");
             do {
-                clientes.add(new ClienteTCP(server.accept(), this));
+                
+                clientes.add(new ClienteUDP(server, this));
                 System.out.println("Cliente "+clientes.size()+" registrado");
             } while (clientes.size() < 2);
             System.out.println("Clientes registrados");
@@ -58,22 +60,22 @@ public class ServidorTCP extends Thread implements Config, Comunicacion {
                 hayJuego = true;
             }
         } catch (IOException ex) {
-            Logger.getLogger(ServidorTCP.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ServidorUDP.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
     @Override
-    public void difusion(String info, ClienteTCP cliente) {
-        for (ClienteTCP c : clientes) {
+    public void difusion(String info, ClienteUDP cliente) {
+        for (ClienteUDP c : clientes) {
             if(cliente != c)
                 c.setInfo(info);
         }
     }
 
     @Override
-    public void cerrarConexiones(ClienteTCP cliente) {
+    public void cerrarConexiones(ClienteUDP cliente) {
         clientes.remove(cliente);
-        for (ClienteTCP c : clientes) {
+        for (ClienteUDP c : clientes) {
             c.cerrarConexion();
         }
         hayJuego = false;
@@ -88,7 +90,7 @@ public class ServidorTCP extends Thread implements Config, Comunicacion {
                 }
                 Thread.sleep(100);
             } catch (InterruptedException ex) {
-                Logger.getLogger(ServidorTCP.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(ServidorUDP.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
     }

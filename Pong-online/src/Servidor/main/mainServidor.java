@@ -5,7 +5,7 @@
  */
 package Servidor.main;
 
-import Servidor.Clases.ServidorTCP;
+import Servidor.Clases.ServidorUDP;
 
 /**
  *
@@ -17,7 +17,7 @@ public class mainServidor {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        ServidorTCP servidor = new ServidorTCP();
+        ServidorUDP servidor = new ServidorUDP();
         servidor.start();
     }
     
