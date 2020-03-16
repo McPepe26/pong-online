@@ -32,4 +32,12 @@ public class ClienteTCP extends Thread implements Config{
         }
     }
     
+    public void mandar(String info) throws IOException{
+        salida.writeUTF(info);
+    }
+    
+    public String recibir() throws IOException{
+        return entrada.readUTF();
+    }
+    
 }
