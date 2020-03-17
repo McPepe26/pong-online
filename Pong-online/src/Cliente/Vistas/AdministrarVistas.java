@@ -5,7 +5,7 @@
  */
 package Cliente.Vistas;
 
-import Cliente.Clases.ClienteTCP;
+import Cliente.Clases.ClienteUDP;
 import Cliente.Interfaces.Comunicacion;
 import Cliente.Interfaces.ManejarEventos;
 import java.io.IOException;
@@ -19,7 +19,7 @@ import javax.swing.JOptionPane;
  */
 public class AdministrarVistas implements ManejarEventos, Comunicacion{
 
-    private ClienteTCP cliente;
+    private ClienteUDP cliente;
     private Tablero tab;
     private ClientePrincipal clientePrincipal;
 
@@ -35,7 +35,7 @@ public class AdministrarVistas implements ManejarEventos, Comunicacion{
     @Override
     public void iniciarCliente() {
         //Iniciamos el hilo para comunicarse al servidor
-        cliente = new ClienteTCP(this);
+        cliente = new ClienteUDP(this);
         cliente.start();
     }
 

@@ -8,6 +8,7 @@ package Servidor.Clases;
 import Config.Interfaces.Config;
 import Servidor.Interfaces.Comunicacion;
 import java.io.IOException;
+import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.ServerSocket;
 import java.util.LinkedList;
@@ -18,17 +19,17 @@ import java.util.logging.Logger;
  *
  * @author ja-za
  */
-public class ServidorUDP extends Thread implements Config, Comunicacion {
+public class ServidorUDP extends Thread implements Config {
 
     private DatagramSocket server;
-    private LinkedList<ClienteUDP> clientes;
-    private boolean hayJuego;
+    private LinkedList<int[]> datos;
+    private LinkedList<DatagramPacket> clientes;
 
     public ServidorUDP() {
         try {
             server = new DatagramSocket(PUERTO);
             clientes = new LinkedList<>();
-            hayJuego = false;
+            datos = new LinkedList<>();
         } catch (IOException ex) {
             Logger.getLogger(ServidorUDP.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -36,65 +37,66 @@ public class ServidorUDP extends Thread implements Config, Comunicacion {
 
     public void iniciarServidor() {
         try {
-            System.out.println("Esperando conexiones...");
-            do {
-                
-                clientes.add(new ClienteUDP(server, this));
-                System.out.println("Cliente "+clientes.size()+" registrado");
-            } while (clientes.size() < 2);
-            System.out.println("Clientes registrados");
-            String parametrosInicales = "[" + 385 + "][" + 235 + "]"
-                                      + "[" + 10 + "][" + 210 + "]"
-                                      + "[" + 0 + "][" + 0 + "]";
-            
-            if(clientes.get(0).recibir().equals("ok") && clientes.get(1).recibir().equals("ok")){
-                clientes.get(0).mandar("J1");
-                clientes.get(1).mandar("J2");
-                System.out.println("Asignación de roles");
-                clientes.get(0).mandar(parametrosInicales);
-                clientes.get(1).mandar(parametrosInicales);
-                System.out.println("Asignación de parametros iniciales");
-                System.out.println("Incio del juego");
-                clientes.get(0).start();
-                clientes.get(1).start();
-                hayJuego = true;
+            boolean asignados = false;
+            String nomCliente;
+            System.out.println("Servidor iniciado");
+            while (true) {
+                DatagramPacket packet = new DatagramPacket(new byte[ECHOMAX], ECHOMAX);
+                server.receive(packet);
+                String comando = new String(packet.getData());
+                int data[] = obtenerParametros(comando);
+                if (data[0] == 100000) {
+                    datos.add(new int[7]);
+                    clientes.add(packet);
+                } else if (clientes.size() == 2) {
+                    datos.set(data[6]-1, data);
+                    packet = clientes.get(data[6]-1);
+                    if (data[6] == 1)
+                        packet.setData(convertirParametros(datos.get(1)).getBytes());
+                    else if (data[6] == 2)
+                        packet.setData(convertirParametros(datos.get(0)).getBytes());
+                    server.send(packet);
+                }
+                if(clientes.size() == 2 && !asignados){
+                    nomCliente = "["+1+"]";
+                    packet = clientes.get(0);
+                    packet.setData(nomCliente.getBytes());
+                    server.send(packet);
+                    System.out.println("Cliente " + 1 + " agregado");
+                    
+                    nomCliente = "["+2+"]";
+                    packet = clientes.get(1);
+                    packet.setData(nomCliente.getBytes());
+                    server.send(packet);
+                    System.out.println("Cliente " + 2 + " agregado");
+                    asignados = true;
+                }
             }
         } catch (IOException ex) {
             Logger.getLogger(ServidorUDP.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
-    @Override
-    public void difusion(String info, ClienteUDP cliente) {
-        for (ClienteUDP c : clientes) {
-            if(cliente != c)
-                c.setInfo(info);
-        }
-    }
-
-    @Override
-    public void cerrarConexiones(ClienteUDP cliente) {
-        clientes.remove(cliente);
-        for (ClienteUDP c : clientes) {
-            c.cerrarConexion();
-        }
-        hayJuego = false;
-    }
-
-    @Override
-    public void run() {
-        while(true){
-            try {
-                if(!hayJuego){
-                    iniciarServidor();
-                }
-                Thread.sleep(100);
-            } catch (InterruptedException ex) {
-                Logger.getLogger(ServidorUDP.class.getName()).log(Level.SEVERE, null, ex);
+    public int[] obtenerParametros(String datos) {
+        int[] datosPos = new int[7];
+        try {
+            for (int i = 0; datos.length() > 0; i++) {
+                int fin = datos.indexOf("]");
+                datosPos[i] = Integer.parseInt(datos.substring(1, fin));
+                datos = datos.substring(fin + 1);
             }
+        }catch(StringIndexOutOfBoundsException ex){
+            
         }
+        return datosPos;
     }
-    
-    
+
+    public String convertirParametros(int[] datos) {
+        String params = "";
+        for (int i = 0; i < datos.length; i++) {
+            params += "[" + datos[i] + "]";
+        }
+        return params;
+    }
 
 }

@@ -18,7 +18,7 @@ public class mainServidor {
      */
     public static void main(String[] args) {
         ServidorUDP servidor = new ServidorUDP();
-        servidor.start();
+        servidor.iniciarServidor();
     }
     
 }
